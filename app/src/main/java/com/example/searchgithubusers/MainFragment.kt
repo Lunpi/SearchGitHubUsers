@@ -14,9 +14,8 @@ import com.bumptech.glide.Glide
 class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
-    private val resultAdapter = ResultAdapter()
     private lateinit var progressBar: ProgressBar
-    private var clearResult = false
+    private val resultAdapter = ResultAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +25,10 @@ class MainFragment : Fragment() {
             val editTextKeyword = findViewById<EditText>(R.id.edit_text_keyword)
             val buttonSearch = findViewById<Button>(R.id.button_search).apply {
                 setOnClickListener {
-                    val text = editTextKeyword.text.toString().trim()
-                    clearResult = text != viewModel.keyword
-                    viewModel.keyword = text
-                    if (clearResult) {
-                        viewModel.page = 0
-                    }
+                    resultAdapter.users.clear()
+                    resultAdapter.notifyDataSetChanged()
+                    viewModel.keyword = editTextKeyword.text.toString().trim()
+                    viewModel.page = 0
                     viewModel.startSearch()
                 }
             }
@@ -47,11 +44,8 @@ class MainFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         viewModel.searchResult.observe(this) {
-            if (clearResult) {
-                resultAdapter.users.clear()
-            }
             resultAdapter.users.addAll(it)
-            resultAdapter.notifyDataSetChanged()
+            resultAdapter.notifyItemRangeInserted(resultAdapter.itemCount, it.size)
         }
 
         viewModel.progressing.observe(this) {
