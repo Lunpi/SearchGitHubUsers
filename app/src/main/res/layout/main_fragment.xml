@@ -66,14 +66,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/input_layout" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/recyclerview_result"
-        app:layout_constraintEnd_toEndOf="@id/recyclerview_result"
-        app:layout_constraintStart_toStartOf="@id/recyclerview_result" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

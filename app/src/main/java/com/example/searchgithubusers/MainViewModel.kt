@@ -20,8 +20,8 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = gitHubRepository.search(keyword, ++page)
             totalCount = result.first
-            searchResult.postValue(result.second)
             progressing.postValue(false)
+            searchResult.postValue(result.second)
         }
     }
 }
