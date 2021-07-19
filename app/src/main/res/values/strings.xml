@@ -3,4 +3,5 @@
     <string name="search_text_hint">User name</string>
     <string name="description_avatar">User avatar</string>
     <string name="button_search">Search</string>
+    <string name="no_search_result">"We couldn&apos;t find any users matching &apos;%s&apos;."</string>
 </resources>

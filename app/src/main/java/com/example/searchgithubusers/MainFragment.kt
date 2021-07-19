@@ -1,9 +1,11 @@
 package com.example.searchgithubusers
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +17,7 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var progressBar: ProgressBar
+    private lateinit var noResult: TextView
     private val resultAdapter = ResultAdapter()
 
     override fun onCreateView(
@@ -25,17 +28,28 @@ class MainFragment : Fragment() {
             val editTextKeyword = findViewById<EditText>(R.id.edit_text_keyword)
             val buttonSearch = findViewById<Button>(R.id.button_search).apply {
                 setOnClickListener {
-                    resultAdapter.users.clear()
-                    resultAdapter.notifyDataSetChanged()
-                    viewModel.keyword = editTextKeyword.text.toString().trim()
-                    viewModel.page = 0
-                    viewModel.startSearch()
+                    resultAdapter.apply {
+                        users.clear()
+                        notifyDataSetChanged()
+                    }
+                    viewModel.apply {
+                        keyword = editTextKeyword.text.toString().trim()
+                        page = 0
+                        startSearch()
+                    }
+                    (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+                        if (isAcceptingText) {
+                            hideSoftInputFromWindow(windowToken, 0)
+                        }
+                    }
+                    noResult.visibility = View.GONE
                 }
             }
             val recyclerView = findViewById<RecyclerView>(R.id.recyclerview_result).apply {
                 adapter = resultAdapter
             }
             progressBar = findViewById(R.id.progress_bar)
+            noResult = findViewById(R.id.text_no_result)
         }
     }
 
@@ -43,9 +57,15 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        viewModel.searchResult.observe(this) {
-            resultAdapter.users.addAll(it)
-            resultAdapter.notifyItemRangeInserted(resultAdapter.itemCount, it.size)
+        viewModel.searchResult.observe(this) { result ->
+            noResult.apply {
+                visibility = if (result.isEmpty()) View.VISIBLE else View.GONE
+                text = String.format(getString(R.string.no_search_result), viewModel.keyword)
+            }
+            resultAdapter.apply {
+                users.addAll(result)
+                notifyItemRangeInserted(itemCount, result.size)
+            }
         }
 
         viewModel.progressing.observe(this) {

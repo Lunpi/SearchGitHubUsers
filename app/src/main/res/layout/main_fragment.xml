@@ -39,6 +39,19 @@
         app:layout_constraintStart_toEndOf="@id/input_layout"
         app:layout_constraintTop_toTopOf="@id/input_layout" />
 
+    <TextView
+        android:id="@+id/text_no_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:text="@string/no_search_result"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerview_result"
+        app:layout_constraintEnd_toEndOf="@id/recyclerview_result"
+        app:layout_constraintStart_toStartOf="@id/recyclerview_result"
+        app:layout_constraintTop_toTopOf="@id/recyclerview_result" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_result"
         android:layout_width="0dp"
