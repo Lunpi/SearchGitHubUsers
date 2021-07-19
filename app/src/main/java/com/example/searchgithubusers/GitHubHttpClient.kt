@@ -1,13 +1,13 @@
 package com.example.searchgithubusers
 
-import com.loopj.android.http.SyncHttpClient
-import com.loopj.android.http.TextHttpResponseHandler
+import com.loopj.android.http.AsyncHttpClient
+import com.loopj.android.http.AsyncHttpResponseHandler
 
 class GitHubHttpClient {
 
-    private val client = SyncHttpClient()
+    private val client = AsyncHttpClient()
 
-    fun searchUser(keyword: String, page: Int, handler: TextHttpResponseHandler) {
+    fun searchUser(keyword: String, page: Int, handler: AsyncHttpResponseHandler) {
         val url = GITHUB_API_URL + GITHUB_API_SEARCH_USERS + keyword + GITHUB_API_QUALIFIER + GITHUB_API_PAGE + page
         client.addHeader("User-Agent", "Lunpi")
         client.get(url, handler)

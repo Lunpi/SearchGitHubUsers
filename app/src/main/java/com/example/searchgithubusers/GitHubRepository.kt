@@ -36,6 +36,8 @@ class GitHubRepository {
                     super.onFailure(statusCode, headers, throwable, errorResponse)
                     it.resumeWith(Result.failure(Throwable(errorResponse?.toString() ?: "")))
                 }
+
+                override fun getUseSynchronousMode() = false
             })
         }
     }
