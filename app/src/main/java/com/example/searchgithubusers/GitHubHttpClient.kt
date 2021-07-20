@@ -1,5 +1,6 @@
 package com.example.searchgithubusers
 
+import android.util.Log
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.AsyncHttpResponseHandler
 
@@ -9,12 +10,14 @@ class GitHubHttpClient {
 
     fun searchUser(keyword: String, page: Int, handler: AsyncHttpResponseHandler) {
         val url = GITHUB_API_URL + GITHUB_API_SEARCH_USERS + keyword + GITHUB_API_QUALIFIER + GITHUB_API_PAGE + page
+        Log.d(TAG, "URL: $url")
         client.addHeader("User-Agent", "Lunpi")
         client.get(url, handler)
     }
 
 
     companion object {
+        private const val TAG = "GitHubHttpClient"
         private const val GITHUB_API_URL = "https://api.github.com/"
         private const val GITHUB_API_SEARCH_USERS = "search/users?q="
         private const val GITHUB_API_QUALIFIER = "+type:user+in:login"

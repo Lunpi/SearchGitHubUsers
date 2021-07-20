@@ -1,9 +1,11 @@
 package com.example.searchgithubusers
 
+import android.util.Log
 import com.loopj.android.http.JsonHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONObject
+import java.net.UnknownHostException
 
 class GitHubRepository {
 
@@ -34,11 +36,33 @@ class GitHubRepository {
 
                 override fun onFailure(statusCode: Int, headers: Array<out Header>?, throwable: Throwable?, errorResponse: JSONObject?) {
                     super.onFailure(statusCode, headers, throwable, errorResponse)
-                    it.resumeWith(Result.failure(Throwable(errorResponse?.toString() ?: "")))
+                    Log.e(TAG, "Search onFailure: statusCode: $statusCode, throwable: $throwable, errorResponse: $errorResponse")
+
+                    errorResponse?.optString("message")?.let { message ->
+                        if (message.contains("API rate limit")) {
+                            it.resumeWith(Result.failure(ApiRateExceededException(message)))
+                            return
+                        }
+                    }
+                    throwable?.message?.let { message ->
+                        if (message.contains("UnknownHostException")) {
+                            it.resumeWith(Result.failure(UnknownHostException(message)))
+                            return
+                        }
+                    }
+                    it.resumeWith(Result.failure(Exception(throwable)))
                 }
 
                 override fun getUseSynchronousMode() = false
             })
         }
+    }
+
+
+    class ApiRateExceededException(message: String) : java.lang.Exception(message)
+
+
+    companion object {
+        private const val TAG = "GitHubRepository"
     }
 }

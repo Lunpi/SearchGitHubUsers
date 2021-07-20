@@ -4,4 +4,7 @@
     <string name="description_avatar">User avatar</string>
     <string name="button_search">Search</string>
     <string name="no_search_result">"We couldn&apos;t find any users matching &apos;%s&apos;."</string>
+    <string name="toast_message_api_rate_exceeded">"Too many requests! Please try again later."</string>
+    <string name="toast_message_network_error">"Network connection error."</string>
+    <string name="toast_message_others">"Oops! Something went wrong."</string>
 </resources>

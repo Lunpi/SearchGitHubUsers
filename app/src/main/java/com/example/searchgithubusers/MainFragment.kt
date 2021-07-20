@@ -82,6 +82,20 @@ class MainFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.toastMessage.observe(this) {
+            if (it.isNotEmpty()) {
+                val toastText = when (it) {
+                    MainViewModel.TOAST_MESSAGE_API_RATE_EXCEEDED -> getString(R.string.toast_message_api_rate_exceeded)
+                    MainViewModel.TOAST_MESSAGE_NETWORK_ERROR -> getString(R.string.toast_message_network_error)
+                    else -> getString(R.string.toast_message_others)
+                }
+                resultAdapter.apply {
+                    recyclerView.post { notifyItemRemoved(itemCount) }
+                }
+                context?.run { Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show() }
+            }
+        }
     }
 
 
