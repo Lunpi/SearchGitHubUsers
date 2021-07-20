@@ -26,12 +26,16 @@ class MainFragment : Fragment() {
             val editTextKeyword = findViewById<EditText>(R.id.edit_text_keyword)
             val buttonSearch = findViewById<Button>(R.id.button_search).apply {
                 setOnClickListener {
+                    val inputText = editTextKeyword.text.toString().trim()
+                    if (inputText == viewModel.keyword && viewModel.progressing.value == true) {
+                        return@setOnClickListener
+                    }
                     resultAdapter.apply {
                         items.clear()
                         notifyDataSetChanged()
                     }
                     viewModel.apply {
-                        keyword = editTextKeyword.text.toString().trim()
+                        keyword = inputText
                         page = 0
                         startSearch()
                     }
